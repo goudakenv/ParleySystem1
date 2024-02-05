@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th= "http://www.thymeleaf.org">
+<head th:replace="~{admin/parts/common :: html_head()}"></head>
+<body>
+  <header th:replace="~{admin/parts/common :: header()}"></header>
+  
+  <div class="container">
+    <h1 class="my-4 h3">[[${heading}]]</h1>
+
+    <div class="row">
+      <div class="col-md-12">
+
+        <form class="form" action="" method="post" th:object="${material}">
+          <div class="mb-3">
+              <label>タイトル：<input type="text" th:field="*{name}"></label>
+              <div class="error-message mt-2" th:errors="*{name}"></div>
+          </div>
+          <div class="mb-3">
+              <label>活動場所：<input type="text" th:field="*{publisher}"></label>
+              <div class="error-message mt-2" th:errors="*{publisher}"></div>
+          </div>
+      
+          <div class="mb-3">
+              <label>時間帯：<input type="text" size="50" th:field="*{note}"></label>
+              <div class="error-message mt-2" th:errors="*{note}"></div>
+          </div>
+      
+          <p class="mb-4">連絡手段：
+              <select th:field="*{materialType.id}">
+                  <option th:each="type : ${materialTypeList}" th:value="${type.id}">[[${type.name}]]</option>
+              </select>
+          </p>
+      
+          <input class="btn btn-primary" type="submit" value="保存する">
+          <a th:href="@{/admin/material/list(page=${session.page})}" class="btn btn-secondary">キャンセル</a>
+        </form>
+      </div><!-- /.col- -->
+    </div><!-- /.row -->
+  </div><!-- /.container -->
+
+  <th:block th:replace="~{admin/parts/common :: javascripts()}"></th:block>
+</body>
+</html>

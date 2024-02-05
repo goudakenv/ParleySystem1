@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+<link th:href="@{/css/style.css}" rel="stylesheet">
+<title>メッセージ</title>
+</head>
+<body>
+  <header>
+    <nav class="navbar navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="">投稿</a>
+        <ul class="navbar-nav">
+          <li class="nav-item text-light">[[${session.loginStatus.name}]] [<a th:href="@{/logout}">ログアウト</a>]</li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  
+  
+  
+
+  
+  
+  
+  <div class="container">
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <div th:if="${message != null}" class="alert alert-success">[[${message}]]</div>
+      
+        <h2 class="h4">投稿の送受信</h2>
+        <div th:if="${#lists.size(borrowingList) < 1}" class="alert alert-primary">送信済みのメッセージはありません</div>
+        <table th:if="${#lists.size(borrowingList) >= 1}" class="table table-bordered">
+          <thead>
+            <tr>
+              <th>タイトル</th>
+              <th>連絡手段</th>
+              <th>活動場所</th>
+              <th>時間帯</th>
+                             
+              <th>送信済み</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="material : ${borrowingList}">
+              <td>[[${material.name}]]</td>
+              <td>[[${material.materialType.name}]]</td>
+              <td>[[${material.publisher}]]</td>
+              <td>[[${material.note}]]</td>
+             
+              <td><a th:href="@{/rental/return/{id}(id=${material.id})}" class="btn btn-danger btn-sm">投稿返却</a></td>
+            </tr>
+          </tbody>
+        </table>
+        
+        
+        
+<!--            <p> -->
+<!--            <a th:href="@{/admin/material/add}" class="btn btn-primary">投稿の追加</a> -->
+<!--            <a th:href="@{/admin/student/list}" class="btn btn-light">メンバーリスト</a> -->
+<!--          </p> -->
+        
+        
+        
+        
+  
+        <h2 class="h4 mt-5">送信可能な投稿</h2>
+        <div th:if="${#lists.size(materialList) < 1}" class="alert alert-danger">送信可能なメッセージがありません</div>
+        <table th:if="${#lists.size(materialList) >= 1}"  class="table table-bordered">
+          <thead>
+            <tr>
+             <th>タイトル</th>
+              <th>連絡手段</th>
+              <th>活動場所</th>
+              <th>時間帯</th>
+<!--                          <th>編集</th> -->
+<!--               <th>削除</th> -->
+              <th>下書き</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="material : ${materialList}">
+              <td>[[${material.name}]]</td>
+              <td>[[${material.materialType.name}]]</td>
+              <td>[[${material.publisher}]]</td>
+              <td>[[${material.note}]]</td>
+<!--             <td><a th:href="@{/admin/material/edit/{id}(id=${material.id})}" class="btn btn-warning btn-sm">編集</a></td> -->
+<!-- 	          <td><a th:href="@{/admin/material/delete/{id}(id=${material.id})}" class="btn btn-danger btn-sm delete">削除</a></td> -->
+	                         
+	                         <td><a th:href="@{/rental/borrow/{id}(id=${material.id})}" class="btn btn-success btn-sm">送信</a></td>
+	           
+            </tr>
+          </tbody>
+        </table>
+  
+        <div th:replace="~{widget/pagination :: pagination(${totalPages}, ${currentPage}, 'rental')}"></div>
+      </div><!-- /.col- -->
+    </div><!-- /.row -->
+  </div><!-- /.container -->
+  <script src="js/bootstrap.bundle.min.js"></script>
+  
+  
+  
+  
+
+        
+    
+</body>
+</html>

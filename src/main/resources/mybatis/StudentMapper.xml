@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.mapper.StudentMapper">
+
+	<select id="selectAll" resultType="Student">
+		SELECT * FROM students
+		WHERE status = 'ACT'
+	</select>
+
+	<select id="selectById" parameterType="int" resultType="Student">
+		SELECT * FROM students
+		WHERE id = #{id}
+	</select>
+
+	<select id="selectByLoginId" parameterType="string" resultType="Student">
+		SELECT * FROM students
+		WHERE login_id = #{loginId}
+	</select>
+
+	<update id="setDeleteById" parameterType="int">
+		UPDATE students SET status = 'DEL'
+		WHERE id = #{id}
+	</update>
+
+	<insert id="insert" parameterType="Student" useGeneratedKeys="true">
+		INSERT INTO students (name, birthday, login_id, login_pass)
+		VALUES (#{name}, #{birthday}, #{loginId}, #{loginPass})
+	</insert>
+
+	<update id="update" parameterType="Student">
+		UPDATE students
+		SET name = #{name}, birthday = #{birthday},
+			login_id = #{loginId}, login_pass = #{loginPass}
+		WHERE id = #{id}
+	</update>
+
+	<select id="selectLimited" resultType="Student">
+		SELECT * FROM students
+		WHERE status = 'ACT'
+		LIMIT #{offset}, #{num}
+	</select>
+
+	<select id="countActive" resultType="long">
+		SELECT COUNT(*) FROM students
+		WHERE status = 'ACT'
+	</select>
+
+</mapper>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.mapper.MaterialMapper">
+
+	<resultMap id="material" type="Material" autoMapping="true">
+		<association property="materialType" javaType="MaterialType">
+			<id property="id" column="material_type_id" />
+			<result property="name" column="material_type_name" />
+		</association>
+	</resultMap>
+
+	<sql id="selectAndJoin">
+		SELECT
+			materials.id, materials.name, materials.publisher,
+			materials.note, materials.created, materials.status,
+			materials.material_type_id, material_types.name AS material_type_name,
+			materials.rental_id
+		FROM materials
+		JOIN material_types
+		ON materials.material_type_id = material_types.id
+	</sql>
+
+	<select id="selectAll" resultMap="material">
+		<include refid="selectAndJoin" />
+		WHERE materials.status = 'ACT'
+	</select>
+
+	<select id="selectById" parameterType="int" resultMap="material">
+		<include refid="selectAndJoin" />
+		WHERE materials.id = #{id}
+	</select>
+
+	<select id="selectByName" parameterType="string" resultMap="material">
+		<include refid="selectAndJoin" />
+		WHERE materials.name = #{name}
+	</select>
+
+	<update id="setDeleteById" parameterType="int">
+		UPDATE materials SET status = 'DEL'
+		WHERE id = #{id}
+	</update>
+
+	<insert id="insert" parameterType="Material" useGeneratedKeys="true">
+		INSERT INTO materials (name, publisher, note, material_type_id, created)
+		VALUES (#{name}, #{publisher}, #{note}, #{materialType.id}, NOW())
+	</insert>
+
+	<update id="update" parameterType="Material">
+		UPDATE materials
+		SET name = #{name}, publisher = #{publisher}, note = #{note},
+			material_type_id = #{materialType.id}
+		WHERE id = #{id}
+	</update>
+
+	<select id="selectLimited" resultMap="material">
+		<include refid="selectAndJoin" />
+		WHERE materials.status = 'ACT'
+		LIMIT #{offset}, #{num}
+	</select>
+
+	<select id="countActive" resultType="long">
+		SELECT COUNT(*) FROM materials
+		WHERE status = 'ACT'
+	</select>
+	
+	<select id="selectBorrowingByStudentId" parameterType="int" resultMap="material">
+    	<include refid="selectAndJoin" />
+		LEFT JOIN rental_records
+		ON materials.rental_id = rental_records.id
+		WHERE rental_records.student_id = #{studentId}
+		ORDER BY rental_records.borrowed_at
+	</select>
+
+	<select id="selectBorrowableWithOffset" resultMap="material">
+		<include refid="selectAndJoin" />
+		WHERE materials.status = 'ACT'
+		AND rental_id IS NULL
+		ORDER BY materials.created DESC, materials.id DESC
+		LIMIT #{offset}, #{num}
+	</select>
+
+	<select id="countBorrowable" resultType="long">
+		SELECT COUNT(*) FROM materials
+		WHERE status = 'ACT'
+		AND rental_id IS NULL
+	</select>
+
+	<update id="addBorrowedRecord">
+		UPDATE materials
+		SET rental_id = #{rentalId}
+		WHERE id = #{id}
+	</update>
+
+	<update id="addReturnedRecord" parameterType="int">
+		UPDATE materials
+		SET rental_id = NULL
+		WHERE id = #{id}
+	</update>
+
+</mapper>

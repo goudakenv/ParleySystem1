@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th= "http://www.thymeleaf.org">
+<head th:replace="~{admin/parts/common :: html_head()}"></head>
+<body>
+  <header th:replace="~{admin/parts/common :: header()}"></header>
+
+  <div class="container">
+    <h1 class="my-4 h3">投稿リスト</h1>
+
+    <div class="row">
+      <div class="col-md-12">
+         <p>
+           <a th:href="@{/admin/material/add}" class="btn btn-primary">投稿の追加</a>
+           <a th:href="@{/admin/student/list}" class="btn btn-light">メンバーリスト</a>
+         </p>
+        
+        <div class="alert alert-success" th:if="${message}">
+         [[${message}]]
+        </div>
+        
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+            <th>タイトル</th>
+              <th>連絡手段</th>
+     
+              <th>登録日</th>
+              <th>編集</th>
+              <th>削除</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="material : ${materialList}">
+	          <td><a th:href="@{/admin/material/show/{id}(id=${material.id})}">[[${material.name}]]</a></td>
+	          <td>[[${material.materialType.name}]]</td>
+	          <td>[[${#temporals.format(material.created, 'yyyy年MM月dd日(E) HH時mm分ss秒')}]]</td>
+	          <td><a th:href="@{/admin/material/edit/{id}(id=${material.id})}" class="btn btn-warning btn-sm">編集</a></td>
+	          <td><a th:href="@{/admin/material/delete/{id}(id=${material.id})}" class="btn btn-danger btn-sm delete">削除</a></td>
+	       
+</tr>
+          </tbody>
+        </table>
+
+        <div th:replace="~{widget/pagination :: pagination(${totalPages}, ${currentPage}, 'admin/material/list')}"></div>
+      </div><!-- /.col- -->
+    </div><!-- /.row -->
+  </div><!-- /.container -->
+  
+  <th:block th:replace="~{admin/parts/common :: javascripts()}"></th:block>
+  
+  
+  
+  
+ 
+  
+  
+</body>
+</html>

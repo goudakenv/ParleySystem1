@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="html_head()">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+<link th:href="@{/css/style.css}" rel="stylesheet" />
+<title>心情把握システム</title>
+</head>
+<body>
+
+<header th:fragment="header()">
+  <nav class="navbar navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand" th:href="@{/admin/material/list}">PARLEYシステム</a>
+      <ul class="navbar-nav">
+        <li class="nav-item">[[${session.loginStatus.name}]] [<a th:href="@{/admin/logout}">ログアウト</a>]</li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<th:block th:fragment="javascripts()">
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/button-action.js}"></script>
+</th:block>
+</body>
+</html>

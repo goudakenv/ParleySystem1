@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th= "http://www.thymeleaf.org">
+<head th:replace="~{admin/parts/common :: html_head()}"></head>
+<body>
+  <header th:replace="~{admin/parts/common :: header()}"></header>
+  
+  <div class="container">
+	  <h1 class="my-4 h3">[[${material.name}]]</h1>
+	  
+	  <div class="row">
+	    <div class="col-md-12">
+	      <table class="table table-bordered">
+	        <tbody>
+	          <tr>
+	            <th>連絡手段</th>
+	            <td>[[${material.materialType.name}]]</td>
+	          </tr>
+	          <tr>
+	            <th>活動場所</th>
+	            <td>[[${material.publisher}]]</td>
+	          </tr>
+	          <tr>
+	            <th>時間帯</th>
+	            <td>[[${material.note}]]</td>
+	          </tr>
+	          <tr>
+	            <th>登録日</th>
+	            <td>[[${#temporals.format(material.created, 'yyyy年MM月dd日(E) HH時mm分ss秒')}]]</td>
+	          </tr>
+	          <tr>
+	            <th>送受信記録</th>
+	            <td>
+	              <dl class="d-flex" th:each="record : ${recordList}">
+	                <dt class="mr-2">[[${record.studentName}]]</dt>
+	                <dd>
+	                [[${#temporals.format(record.borrowedAt, 'yyyy年MM月dd日(E) HH時mm分ss秒')}]] ～
+	                [[${#temporals.format(record.returnedAt, 'yyyy年MM月dd日(E) HH時mm分ss秒')}]]
+	                </dd>
+	              </dl>
+	            </td>
+	          </tr>
+	        </tbody>
+	      </table>
+	
+	      <p>
+	        <a th:href="@{/admin/material/list(page=${session.page})}" class="btn btn-primary">投稿リストに戻る</a>
+	      </p>
+	      
+	    </div><!-- /.col- -->
+	  </div><!-- /.row -->
+  </div><!-- /.container -->
+	
+  <th:block th:replace="~{admin/parts/common :: javascripts()}"></th:block>
+</body>
+</html>
